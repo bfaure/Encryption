@@ -1,6 +1,7 @@
 
 import sys
 
+#				  0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25
 letters_upper = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 letters_lower = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
 
@@ -15,6 +16,20 @@ def input_validator(alpha, beta): # Checks the alpha and beta values for correct
 
 	return True
 
+# Find the modular multiplicative inverse
+def modulo_inverse(alpha):
+
+	# We need to find the value of x to satisfy the following
+	# equation -> (ax)mod26=1 so we will just brute force it.
+	# If the process takes too many steps than we will return
+	# an error code.
+
+	for x in range(0, 1000000):
+
+		if (alpha*x) % 26 == 1: # If this is true then x is the modular inverse
+			return x
+
+	return False # Return false if not found
 
 # Decrypt affine ciphertext with provided alpha and beta
 def affine_decrypt(ciphertext, alpha, beta):
@@ -24,6 +39,11 @@ def affine_decrypt(ciphertext, alpha, beta):
 
 	print "Decrypting with alpha = "+str(alpha)+" & beta = "+str(beta)+"."
 	plaintext = ""
+	
+	inverse = modulo_inverse(alpha)
+	if inverse == False:
+		print "Could not calculate modulo multiplicative inverse."
+		return ""
 
 	for letter in ciphertext: # Iterate through each letter in the plaintext
 		
@@ -38,26 +58,18 @@ def affine_decrypt(ciphertext, alpha, beta):
 				letter_set 		= letters_lower
 
 			elif letter in letters_upper: # If the letter is uppercase
-				letter_set = letters_upper
+				letter_set 		= letters_upper
 
 			else: # The current is not a letter
 				is_letter = False
 
 			if is_letter: # If the current is either an uppercase or lowercase letter
 
-				fx = letter_set.index(letter) # Get the index of the letter
-				x = (fx-beta)/alpha # Calculate the new location
-
-				if x < 26: # If the new location does not need modulus
-					plaintext += letter_set[x] # Add the new encrypted letter
-				else: # If the new location does need modulus
-
-					found = False
-					while(found==False):
-						x = x - 26 # Subtract 26
-						if x < 26:
-							plaintext 	+= letter_set[x] # Add the new encrypted letter
-							found 		= True # We can stop modulus operation now
+				fx 	= letter_set.index(letter) # Get the index of the letter
+				x 	= (fx-beta)*inverse
+				x 	= x % 26 # Calculate the modulo
+				
+				plaintext += letter_set[x]
 			
 			else: # If the current was not on the regular letter line (probably a number)
 				plaintext += letter
@@ -86,42 +98,29 @@ def affine_encrypt(plaintext, alpha, beta):
 				letter_set 		= letters_lower
 
 			elif letter in letters_upper: # If the letter is uppercase
-				letter_set = letters_upper
+				letter_set 		= letters_upper
 
 			else: # The current is not a letter
 				is_letter = False
 
 			if is_letter: # If the current is either an uppercase or lowercase letter
 
-				x = letter_set.index(letter) # Get the index of the letter
-				fx = (alpha*x)+beta # Calculate the new location
+				x 	= letter_set.index(letter) # Get the index of the letter
+				fx 	= (alpha*x)+beta # Calculate the new location
+				fx 	= fx % 26 # Calculate the modulo
 
-				if fx < 26: # If the new location does not need modulus
-					ciphertext += letter_set[fx] # Add the new encrypted letter
-				else: # If the new location does need modulus
-
-					found = False
-					while(found==False):
-						fx = fx - 26 # Subtract 26
-						if fx < 26:
-							ciphertext 	+= letter_set[fx] # Add the new encrypted letter
-							found 		= True # We can stop modulus operation now
+				ciphertext += letter_set[fx]
 			
 			else: # If the current was not on the regular letter line (probably a number)
 				ciphertext += letter
 
 	return ciphertext
 
-
-
-
-
-
 def main():
 
-	plaintext 	= "Brian D. Faure"
-	alpha 		= 2
-	beta 		= 10
+	plaintext 	= "a f f i n e c i p h e r"
+	alpha 		= 5
+	beta 		= 5
 
 	print"Plaintext: "+plaintext
 
