@@ -35,7 +35,7 @@ def modulo_inverse(alpha):
 def affine_decrypt(ciphertext, alpha, beta):
 
 	if input_validator(alpha,beta) == False:
-		return ""
+		return False
 
 	print "Decrypting with alpha = "+str(alpha)+" & beta = "+str(beta)+"."
 	plaintext = ""
@@ -43,7 +43,7 @@ def affine_decrypt(ciphertext, alpha, beta):
 	inverse = modulo_inverse(alpha)
 	if inverse == False:
 		print "Could not calculate modulo multiplicative inverse."
-		return ""
+		return False
 
 	for letter in ciphertext: # Iterate through each letter in the plaintext
 		
@@ -80,7 +80,7 @@ def affine_decrypt(ciphertext, alpha, beta):
 def affine_encrypt(plaintext, alpha, beta):
 
 	if input_validator(alpha,beta) == False:
-		return ""
+		return False
 
 	print "Encrypting with alpha = "+str(alpha)+" & beta = "+str(beta)+"."
 	ciphertext = ""
@@ -118,20 +118,39 @@ def affine_encrypt(plaintext, alpha, beta):
 
 def main():
 
-	plaintext 	= "a f f i n e c i p h e r"
-	alpha 		= 5
-	beta 		= 5
+	if len(sys.argv) == 5:
+		# The four arguments (after affine.py) should be [filename] [function] [alpha] [beta]
+		print "Note: Argument order is as follows -> [filename] [-e or -d] [alpha] [beta]"
+		
+		filename 	= sys.argv[1]
+		function 	= sys.argv[2]
+		alpha 		= int(sys.argv[3])
+		beta 		= int(sys.argv[4])
 
-	print"Plaintext: "+plaintext
+		# Reading the entire file into string 'data'
+		with open(filename, 'r') as source:
+			data = source.read().replace('\n', '')
 
-	# Inputs to the affine cipher are the plaintext, alpha, and beta
-	ciphertext = affine_encrypt(plaintext, alpha, beta)
+		if function == "-e" or function == "-E":
+			new_data = affine_encrypt(data, alpha, beta)
+		elif function == "-d" or function == "-D":
+			new_data = affine_decrypt(data, alpha, beta)
+		else:
+			print "ERROR: The second argument should be either -e (encrypt) or -d (decrypt)."
+			return
 
-	print "Ciphertext: "+ciphertext
+		if new_data == False: # Something went wrong with translation
+			print "ERROR: Ensure that alpha > 0, beta >= 0, alpha and 26 are coprime."
+			return
 
-	print "Re-converted plaintext: "+affine_decrypt(ciphertext, alpha, beta)
+		new_file = open(filename, 'w')
+		new_file.write(new_data)
 
+		print "Process complete."
+		return
 
+	else:
+		print "ERROR: Argument order is as follows -> [filename] [-e or -d] [alpha] [beta]"
 
 
 
