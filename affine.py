@@ -47,7 +47,10 @@ def affine_decrypt(ciphertext, alpha, beta):
 
 	for letter in ciphertext: # Iterate through each letter in the plaintext
 		
-		if letter == " ": # If the letter is just a space
+		if letter == '\n':
+			plaintext += '\n'
+
+		elif letter == " ": # If the letter is just a space
 			plaintext += " " # Add space to ciphertext
 
 		else: # If the letter is not a space
@@ -85,9 +88,14 @@ def affine_encrypt(plaintext, alpha, beta):
 	print "Encrypting with alpha = "+str(alpha)+" & beta = "+str(beta)+"."
 	ciphertext = ""
 
+	index = 0 # Track location in text
+	endline = False # True if 
 	for letter in plaintext: # Iterate through each letter in the plaintext
+
+		if letter == '\n':
+			ciphertext += '\n'
 		
-		if letter == " ": # If the letter is just a space
+		elif letter == " ": # If the letter is just a space
 			ciphertext += " " # Add space to ciphertext
 
 		else: # If the letter is not a space
@@ -129,7 +137,8 @@ def main():
 
 		# Reading the entire file into string 'data'
 		with open(filename, 'r') as source:
-			data = source.read().replace('\n', '')
+			data = source.read()
+			#data = source.read().replace('\n', '')
 
 		if function == "-e" or function == "-E":
 			new_data = affine_encrypt(data, alpha, beta)
@@ -151,8 +160,6 @@ def main():
 
 	else:
 		print "ERROR: Argument order is as follows -> [filename] [-e or -d] [alpha] [beta]"
-
-
 
 
 if __name__ == '__main__':
