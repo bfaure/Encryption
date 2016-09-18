@@ -153,9 +153,42 @@ class window(QtGui.QWidget):
 		self.clear_button.clicked.connect(self.clear)
 		self.right_lower_horizontal.addWidget(self.clear_button)
 
+		# Menu bar widgets
+		self.menu_bar = QtGui.QMenuBar(self)
+		self.file_menu = self.menu_bar.addMenu("File")
+		self.edit_menu = self.menu_bar.addMenu("Edit")
+
+		# Menu bar actions
+		self.parse_text_action = self.file_menu.addAction("Import Text From File...", self.parse)
+		self.file_menu.addSeparator()
+		self.save_action = self.file_menu.addAction("Save...", self.save)
+		self.file_menu.addSeparator()
+		self.quit_action = self.file_menu.addAction("Quit", self.quit)
+
 		# Showing the window
 		self.show()
 		self.encryption_type_selected()
+
+	def save(self):
+		filename = QtGui.QFileDialog.getSaveFileName(self, 'Save As')
+		if filename != "":
+			text = self.pastebox.text()
+			new_file = open(filename, 'w')
+			new_file.write(text)
+
+	def quit(self):
+		print "In quit"
+		QtCore.QCoreApplication.instance().quit()
+
+	def parse(self):
+		filename = QtGui.QFileDialog.getOpenFileName(self, 'Select File')
+
+		if filename != "":
+			with open(filename, 'r') as source:
+				data = source.read()
+			self.pastebox.setText(data)
+			self.have_text = True
+			return
 
 	def param_changed(self):
 		self.check_config()
