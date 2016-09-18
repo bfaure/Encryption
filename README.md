@@ -13,7 +13,7 @@ Various files for encrypting/decrypting data. User interface cleanly pulls all f
 
 ## Screenshots
 
-**User Interface**
+**User Interface**<br/><br/>
 ![Alt text](https://github.com/bfaure/Encryption/blob/master/archive/Untitled.png)
 ![Alt text](https://github.com/bfaure/Encryption/blob/master/archive/encrypted.png)
 
