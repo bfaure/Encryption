@@ -14,8 +14,8 @@ Various files for encrypting/decrypting data. User interface cleanly pulls all f
 ## Screenshots
 
 **User Interface**
-[!Alt text](https://github.com/bfaure/Encryption/blob/master/archive/Untitled.png)
-[!Alt text](https://github.com/bfaure/Encryption/blob/master/archive/encrypted.png)
+![Alt text](https://github.com/bfaure/Encryption/blob/master/archive/Untitled.png)
+![Alt text](https://github.com/bfaure/Encryption/blob/master/archive/encrypted.png)
 
 ## Dependencies
 Python 2.7, PyQt4 for UI
