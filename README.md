@@ -1,5 +1,5 @@
 # Encryption
-Various files for encrypting/decrypting data. User interface cleanly pulls all functionality together.
+Various files for encrypting/decrypting data. User interface cleanly pulls all functionality together. Currently the windowed application supports the Affine and Caesar (shift) ciphers.
 
 ## Files
 
