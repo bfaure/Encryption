@@ -159,7 +159,7 @@ class window(QtGui.QWidget):
 		self.edit_menu = self.menu_bar.addMenu("Edit")
 
 		# Menu bar actions
-		self.parse_text_action = self.file_menu.addAction("Import Text From File...", self.parse)
+		self.parse_text_action = self.file_menu.addAction("Import Text...", self.parse)
 		self.file_menu.addSeparator()
 		self.save_action = self.file_menu.addAction("Save...", self.save)
 		self.file_menu.addSeparator()
@@ -172,12 +172,11 @@ class window(QtGui.QWidget):
 	def save(self):
 		filename = QtGui.QFileDialog.getSaveFileName(self, 'Save As')
 		if filename != "":
-			text = self.pastebox.text()
-			new_file = open(filename, 'w')
+			text = self.pastebox.toPlainText()
+			new_file = open(filename+".txt", 'w')
 			new_file.write(text)
 
 	def quit(self):
-		print "In quit"
 		QtCore.QCoreApplication.instance().quit()
 
 	def parse(self):
